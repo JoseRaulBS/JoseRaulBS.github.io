@@ -5,29 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>José Raúl · Menú</title>
   <meta name="description" content="Perfil profesional: LinkedIn, contacto, teléfono y póster." />
+  <meta name="theme-color" content="#eaf2ff" />
 
   <!-- ============================================================
        PERSONALIZA AQUI (datos rapidos):
        - Nombre mostrado: texto dentro de <h1 id="nombre">
-       - Iniciales del avatar: texto dentro de <div class="avatar">
        - LinkedIn / Email / Telefono: href de cada boton
        - Textos en los dos idiomas: objeto I18N al final (en <script>)
        ============================================================ -->
 
   <style>
     :root {
-      --color-fondo: #0f172a;
-      --color-tarjeta: #1e293b;
-      --color-acento: #c8102e;   /* rojo UAL */
-      --color-texto: #f8fafc;
-      --color-texto-suave: #94a3b8;
+      --color-fondo: #eaf2ff;        /* azul muy claro */
+      --color-tarjeta: #ffffff;      /* tarjeta blanca */
+      --color-acento: #2563eb;       /* azul principal */
+      --color-acento-suave: #eff5ff; /* azul tenue (hover/relleno) */
+      --color-texto: #0f2747;        /* azul oscuro para texto */
+      --color-texto-suave: #5b7290;  /* azul grisaceo suave */
+      --color-borde: #dbe6f5;        /* borde claro */
       --radio: 16px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -10%, #1e293b 0%, var(--color-fondo) 60%);
+      background: radial-gradient(1100px 600px at 50% -10%, #dcebff 0%, var(--color-fondo) 55%, #f5f9ff 100%);
       color: var(--color-texto);
       min-height: 100vh;
       display: flex;
@@ -40,18 +42,18 @@
       width: 100%;
       max-width: 420px;
       background: var(--color-tarjeta);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid var(--color-borde);
       border-radius: var(--radio);
       padding: 18px 24px 28px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      box-shadow: 0 18px 50px rgba(37,99,235,0.12);
       text-align: center;
     }
 
     /* Conmutador de idioma */
     .lang { display: flex; gap: 6px; justify-content: flex-end; margin-bottom: 10px; }
     .lang button {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.15);
+      background: #fff;
+      border: 1px solid var(--color-borde);
       color: var(--color-texto-suave);
       border-radius: 8px;
       padding: 4px 11px;
@@ -62,16 +64,15 @@
     }
     .lang button.activo { background: var(--color-acento); color: #fff; border-color: var(--color-acento); }
 
-    .avatar {
-      width: 92px; height: 92px;
-      margin: 4px auto 16px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--color-acento), #7a0a1c);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 1px;
+    /* Logo del congreso CAI 2026 */
+    .logo-cai { display: block; text-decoration: none; margin: 2px auto 20px; }
+    .logo-cap {
+      display: block; font-size: 11px; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--color-texto-suave); margin-bottom: 8px;
     }
+    .logo-cai img { width: 100%; max-width: 210px; height: auto; display: block; margin: 0 auto; }
 
-    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    h1 { font-size: 23px; font-weight: 700; margin-bottom: 4px; }
     .subtitle { color: var(--color-texto-suave); font-size: 14px; margin-bottom: 24px; }
 
     .botones { display: flex; flex-direction: column; gap: 12px; }
@@ -80,19 +81,20 @@
       display: flex; align-items: center; gap: 14px;
       width: 100%; padding: 15px 16px;
       border-radius: 12px;
-      background: #0f172a;
-      border: 1px solid rgba(255,255,255,0.08);
+      background: #f7faff;
+      border: 1px solid var(--color-borde);
       color: var(--color-texto);
       text-decoration: none;
       font-size: 16px; font-weight: 600;
       cursor: pointer; text-align: left;
       font-family: inherit;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
     }
     .boton:hover, .boton:active {
       transform: translateY(-2px);
       border-color: var(--color-acento);
-      background: #16223b;
+      background: var(--color-acento-suave);
+      box-shadow: 0 8px 18px rgba(37,99,235,0.12);
     }
     .boton .icono {
       width: 40px; height: 40px; flex: 0 0 40px;
@@ -106,31 +108,34 @@
       color: var(--color-texto-suave); margin-top: 3px;
     }
 
+    /* Iconos en una gama azul cohesionada */
     .ic-linkedin { background: #0a66c2; }
-    .ic-mail     { background: #c8102e; }
-    .ic-call     { background: #16a34a; }
-    .ic-poster   { background: #ea580c; }
+    .ic-mail     { background: #2563eb; }
+    .ic-call     { background: #0891b2; }
+    .ic-poster   { background: #4f46e5; }
 
     footer { margin-top: 24px; font-size: 11px; color: var(--color-texto-suave); }
 
     /* ---------- Modal del poster ---------- */
     .overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.82);
+      background: rgba(15,39,71,0.45);
+      backdrop-filter: blur(2px);
       display: none; align-items: center; justify-content: center;
       padding: 16px; z-index: 50;
     }
     .overlay.abierto { display: flex; }
     .modal {
       background: var(--color-tarjeta);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid var(--color-borde);
       border-radius: 16px;
       width: 100%; max-width: 760px; max-height: 92vh;
       display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 24px 60px rgba(15,39,71,0.30);
     }
     .modal-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 14px 16px; border-bottom: 1px solid var(--color-borde);
     }
     .modal-header h2 { font-size: 17px; }
     .cerrar {
@@ -139,15 +144,15 @@
     }
     .cerrar:hover { color: var(--color-texto); }
     .modal-body {
-      flex: 1; overflow: auto; background: #0b1120;
+      flex: 1; overflow: auto; background: #f1f6ff;
       display: flex; align-items: center; justify-content: center;
       min-height: 260px; padding: 12px;
     }
-    .modal-body img { max-width: 100%; height: auto; border-radius: 8px; display: block; }
+    .modal-body img { max-width: 100%; height: auto; border-radius: 8px; display: block; box-shadow: 0 6px 18px rgba(15,39,71,0.15); }
     .sin-preview { color: var(--color-texto-suave); font-size: 14px; text-align: center; padding: 32px 16px; }
     .modal-footer {
       display: flex; gap: 10px; padding: 12px 16px;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid var(--color-borde);
     }
     .modal-footer a {
       flex: 1; text-align: center; text-decoration: none;
@@ -155,7 +160,7 @@
       color: #fff;
     }
     .btn-descargar { background: var(--color-acento); }
-    .btn-pantalla  { background: #0f172a; border: 1px solid rgba(255,255,255,0.15); color: var(--color-texto); }
+    .btn-pantalla  { background: #f1f6ff; border: 1px solid var(--color-borde); color: var(--color-texto); }
     @media (max-width: 440px) { .modal-footer { flex-direction: column; } }
   </style>
 </head>
@@ -168,7 +173,12 @@
       <button type="button" data-lang="en">EN</button>
     </div>
 
-    <div class="avatar">JR</div>
+    <!-- Logo del congreso CAI 2026 (enlaza a la web oficial) -->
+    <a class="logo-cai" href="https://cai2026.es/" target="_blank" rel="noopener" title="CAI 2026 · Salamanca">
+      <span class="logo-cap" data-i18n="congreso_caption">Póster presentado en</span>
+      <img src="cai2026-logo.png" alt="1º Congreso de Análisis Instrumental — CAI 2026, Salamanca" />
+    </a>
+
     <h1 id="nombre">José Raúl</h1>
     <p class="subtitle" data-i18n="greeting">Bienvenido · elige una opción</p>
 
@@ -195,7 +205,7 @@
         <span class="icono ic-call">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.12.35.03.74-.24 1.02l-2.2 2.2z"/></svg>
         </span>
-        <span class="texto"><span data-i18n="call">Llamar por teléfono</span><small data-i18n="call_sub">¿No estoy junto al póster ahora mismo? Llámame y hablamos.</small></span>
+        <span class="texto"><span data-i18n="call">Llamar por teléfono</span><small data-i18n="call_sub">Si no estoy, llámame y nos tomamos un café junto al póster.</small></span>
       </a>
 
       <!-- Poster (abre el modal) -->
@@ -237,12 +247,13 @@
     // Para cambiar cualquier texto, edita aqui. El nombre (José Raúl) es igual en los dos idiomas.
     var I18N = {
       es: {
+        congreso_caption: "Póster presentado en",
         greeting: "Bienvenido · elige una opción",
         linkedin: "Ver perfil de LinkedIn",
         email: "Enviar un email",
         email_subject: "Contacto desde el QR",
         call: "Llamar por teléfono",
-        call_sub: "¿No estoy junto al póster ahora mismo? Llámame y hablamos: +34 655 10 18 83",
+        call_sub: "Si no estoy, llámame y nos tomamos un café junto al póster: +34 655 10 18 83",
         poster: "Ver póster",
         poster_sub: "Previsualización y descarga (PDF)",
         poster_title: "Póster",
@@ -252,12 +263,13 @@
         footer: "Escanea · comparte · conecta"
       },
       en: {
+        congreso_caption: "Poster presented at",
         greeting: "Welcome · choose an option",
         linkedin: "View LinkedIn profile",
         email: "Send an email",
         email_subject: "Contact from the QR",
         call: "Call by phone",
-        call_sub: "Not next to the poster right now? Call me and let's talk: +34 655 10 18 83",
+        call_sub: "If I'm away, call me and let's grab a coffee by the poster: +34 655 10 18 83",
         poster: "View poster",
         poster_sub: "Preview and download (PDF)",
         poster_title: "Poster",
