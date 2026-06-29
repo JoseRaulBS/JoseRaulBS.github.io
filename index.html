@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>José Raúl · Menú</title>
+  <meta name="description" content="Perfil profesional: LinkedIn, contacto, teléfono y póster." />
+
+  <!-- ============================================================
+       PERSONALIZA AQUI (datos rapidos):
+       - Nombre mostrado: texto dentro de <h1 id="nombre">
+       - Iniciales del avatar: texto dentro de <div class="avatar">
+       - LinkedIn / Email / Telefono: href de cada boton
+       - Textos en los dos idiomas: objeto I18N al final (en <script>)
+       ============================================================ -->
+
+  <style>
+    :root {
+      --color-fondo: #0f172a;
+      --color-tarjeta: #1e293b;
+      --color-acento: #c8102e;   /* rojo UAL */
+      --color-texto: #f8fafc;
+      --color-texto-suave: #94a3b8;
+      --radio: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 50% -10%, #1e293b 0%, var(--color-fondo) 60%);
+      color: var(--color-texto);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .tarjeta {
+      width: 100%;
+      max-width: 420px;
+      background: var(--color-tarjeta);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radio);
+      padding: 18px 24px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      text-align: center;
+    }
+
+    /* Conmutador de idioma */
+    .lang { display: flex; gap: 6px; justify-content: flex-end; margin-bottom: 10px; }
+    .lang button {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--color-texto-suave);
+      border-radius: 8px;
+      padding: 4px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .12s ease;
+    }
+    .lang button.activo { background: var(--color-acento); color: #fff; border-color: var(--color-acento); }
+
+    .avatar {
+      width: 92px; height: 92px;
+      margin: 4px auto 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-acento), #7a0a1c);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 1px;
+    }
+
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { color: var(--color-texto-suave); font-size: 14px; margin-bottom: 24px; }
+
+    .botones { display: flex; flex-direction: column; gap: 12px; }
+
+    .boton {
+      display: flex; align-items: center; gap: 14px;
+      width: 100%; padding: 15px 16px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--color-texto);
+      text-decoration: none;
+      font-size: 16px; font-weight: 600;
+      cursor: pointer; text-align: left;
+      font-family: inherit;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .boton:hover, .boton:active {
+      transform: translateY(-2px);
+      border-color: var(--color-acento);
+      background: #16223b;
+    }
+    .boton .icono {
+      width: 40px; height: 40px; flex: 0 0 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .boton .icono svg { width: 22px; height: 22px; }
+    .boton .texto { line-height: 1.25; flex: 1; }
+    .boton .texto small {
+      display: block; font-weight: 400; font-size: 12px;
+      color: var(--color-texto-suave); margin-top: 3px;
+    }
+
+    .ic-linkedin { background: #0a66c2; }
+    .ic-mail     { background: #c8102e; }
+    .ic-call     { background: #16a34a; }
+    .ic-poster   { background: #ea580c; }
+
+    footer { margin-top: 24px; font-size: 11px; color: var(--color-texto-suave); }
+
+    /* ---------- Modal del poster ---------- */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.82);
+      display: none; align-items: center; justify-content: center;
+      padding: 16px; z-index: 50;
+    }
+    .overlay.abierto { display: flex; }
+    .modal {
+      background: var(--color-tarjeta);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      width: 100%; max-width: 760px; max-height: 92vh;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .modal-header h2 { font-size: 17px; }
+    .cerrar {
+      background: transparent; border: none; color: var(--color-texto-suave);
+      font-size: 26px; line-height: 1; cursor: pointer; padding: 0 4px;
+    }
+    .cerrar:hover { color: var(--color-texto); }
+    .modal-body {
+      flex: 1; overflow: auto; background: #0b1120;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 260px; padding: 12px;
+    }
+    .modal-body img { max-width: 100%; height: auto; border-radius: 8px; display: block; }
+    .sin-preview { color: var(--color-texto-suave); font-size: 14px; text-align: center; padding: 32px 16px; }
+    .modal-footer {
+      display: flex; gap: 10px; padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .modal-footer a {
+      flex: 1; text-align: center; text-decoration: none;
+      padding: 12px; border-radius: 10px; font-weight: 600; font-size: 14px;
+      color: #fff;
+    }
+    .btn-descargar { background: var(--color-acento); }
+    .btn-pantalla  { background: #0f172a; border: 1px solid rgba(255,255,255,0.15); color: var(--color-texto); }
+    @media (max-width: 440px) { .modal-footer { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <main class="tarjeta">
+
+    <!-- Conmutador de idioma -->
+    <div class="lang">
+      <button type="button" data-lang="es">ES</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+
+    <div class="avatar">JR</div>
+    <h1 id="nombre">José Raúl</h1>
+    <p class="subtitle" data-i18n="greeting">Bienvenido · elige una opción</p>
+
+    <nav class="botones">
+
+      <!-- LinkedIn -->
+      <a class="boton" href="https://www.linkedin.com/in/joseraulbs" target="_blank" rel="noopener">
+        <span class="icono ic-linkedin">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4V24h-4V8zm7 0h3.8v2.2h.05c.53-1 1.83-2.2 3.77-2.2 4.03 0 4.78 2.65 4.78 6.1V24h-4v-7.1c0-1.7-.03-3.9-2.38-3.9-2.38 0-2.74 1.86-2.74 3.78V24h-4V8z"/></svg>
+        </span>
+        <span class="texto"><span data-i18n="linkedin">Ver perfil de LinkedIn</span><small>linkedin.com/in/joseraulbs</small></span>
+      </a>
+
+      <!-- Email -->
+      <a class="boton" id="btn-email" href="mailto:jbs324@ual.es">
+        <span class="icono ic-mail">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm10 7L3.5 6h17L12 11zm0 2.2L3 7.3V18h18V7.3l-9 5.9z"/></svg>
+        </span>
+        <span class="texto"><span data-i18n="email">Enviar un email</span><small>jbs324@ual.es</small></span>
+      </a>
+
+      <!-- Llamada -->
+      <a class="boton" href="tel:+34655101883">
+        <span class="icono ic-call">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.12.35.03.74-.24 1.02l-2.2 2.2z"/></svg>
+        </span>
+        <span class="texto"><span data-i18n="call">Llamar por teléfono</span><small data-i18n="call_sub">¿No estoy junto al póster ahora mismo? Llámame y hablamos.</small></span>
+      </a>
+
+      <!-- Poster (abre el modal) -->
+      <button class="boton" type="button" id="btn-poster">
+        <span class="icono ic-poster">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M21 5v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zm-2 0H5v9.59l3.3-3.3 4 4 3-3L19 16.59V5zM7.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+        </span>
+        <span class="texto"><span data-i18n="poster">Ver póster</span><small data-i18n="poster_sub">Previsualización y descarga (PDF)</small></span>
+      </button>
+
+    </nav>
+
+    <footer data-i18n="footer">Escanea · comparte · conecta</footer>
+  </main>
+
+  <!-- ---------- Modal del poster ---------- -->
+  <div class="overlay" id="overlay-poster" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 data-i18n="poster_title">Póster</h2>
+        <button class="cerrar" id="cerrar-poster" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Previsualizacion: imagen poster.jpg. Si no existe, se muestra el aviso. -->
+        <img id="poster-img" src="poster.jpg" alt="Póster" />
+        <div class="sin-preview" id="poster-sin-preview" style="display:none" data-i18n="poster_missing">
+          La previsualización aún no está disponible.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn-descargar" href="poster.pdf" download data-i18n="poster_download">Descargar PDF</a>
+        <a class="btn-pantalla" href="poster.pdf" target="_blank" rel="noopener" data-i18n="poster_fullscreen">Abrir a pantalla completa</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===================== TEXTOS (ES / EN) =====================
+    // Para cambiar cualquier texto, edita aqui. El nombre (José Raúl) es igual en los dos idiomas.
+    var I18N = {
+      es: {
+        greeting: "Bienvenido · elige una opción",
+        linkedin: "Ver perfil de LinkedIn",
+        email: "Enviar un email",
+        email_subject: "Contacto desde el QR",
+        call: "Llamar por teléfono",
+        call_sub: "¿No estoy junto al póster ahora mismo? Llámame y hablamos: +34 655 10 18 83",
+        poster: "Ver póster",
+        poster_sub: "Previsualización y descarga (PDF)",
+        poster_title: "Póster",
+        poster_download: "Descargar PDF",
+        poster_fullscreen: "Abrir a pantalla completa",
+        poster_missing: "La previsualización aún no está disponible. Puedes descargar el PDF.",
+        footer: "Escanea · comparte · conecta"
+      },
+      en: {
+        greeting: "Welcome · choose an option",
+        linkedin: "View LinkedIn profile",
+        email: "Send an email",
+        email_subject: "Contact from the QR",
+        call: "Call by phone",
+        call_sub: "Not next to the poster right now? Call me and let's talk: +34 655 10 18 83",
+        poster: "View poster",
+        poster_sub: "Preview and download (PDF)",
+        poster_title: "Poster",
+        poster_download: "Download PDF",
+        poster_fullscreen: "Open fullscreen",
+        poster_missing: "The preview is not available yet. You can download the PDF.",
+        footer: "Scan · share · connect"
+      }
+    };
+
+    function aplicarIdioma(lang) {
+      var t = I18N[lang] || I18N.es;
+      document.documentElement.lang = lang;
+      // Textos con data-i18n
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var clave = el.getAttribute("data-i18n");
+        if (t[clave] != null) el.textContent = t[clave];
+      });
+      // Asunto del email
+      var email = document.getElementById("btn-email");
+      email.setAttribute("href", "mailto:jbs324@ual.es?subject=" + encodeURIComponent(t.email_subject));
+      // Botones de idioma activos
+      document.querySelectorAll(".lang button").forEach(function (b) {
+        b.classList.toggle("activo", b.getAttribute("data-lang") === lang);
+      });
+      try { localStorage.setItem("lang", lang); } catch (e) {}
+    }
+
+    // Idioma inicial: el guardado, o el del navegador, o español.
+    (function () {
+      var guardado = null;
+      try { guardado = localStorage.getItem("lang"); } catch (e) {}
+      var nav = (navigator.language || "es").slice(0, 2).toLowerCase();
+      var inicial = guardado || (nav === "en" ? "en" : "es");
+      aplicarIdioma(inicial);
+    })();
+
+    document.querySelectorAll(".lang button").forEach(function (b) {
+      b.addEventListener("click", function () { aplicarIdioma(b.getAttribute("data-lang")); });
+    });
+
+    // ===================== MODAL DEL POSTER =====================
+    var overlay = document.getElementById("overlay-poster");
+    var img = document.getElementById("poster-img");
+    var sinPreview = document.getElementById("poster-sin-preview");
+
+    document.getElementById("btn-poster").addEventListener("click", function () {
+      overlay.classList.add("abierto");
+    });
+    function cerrar() { overlay.classList.remove("abierto"); }
+    document.getElementById("cerrar-poster").addEventListener("click", cerrar);
+    overlay.addEventListener("click", function (e) { if (e.target === overlay) cerrar(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") cerrar(); });
+
+    // Si poster.jpg no existe todavia, se oculta la imagen y se muestra el aviso.
+    img.addEventListener("error", function () {
+      img.style.display = "none";
+      sinPreview.style.display = "block";
+    });
+  </script>
+</body>
+</html>
