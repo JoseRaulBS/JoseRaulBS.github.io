@@ -184,7 +184,7 @@
     <nav class="botones">
 
       <!-- LinkedIn -->
-      <a class="boton" href="https://www.linkedin.com/in/joseraulbs" target="_blank" rel="noopener">
+      <a class="boton" data-evento="linkedin" href="https://www.linkedin.com/in/joseraulbs" target="_blank" rel="noopener">
         <span class="icono ic-linkedin">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4V24h-4V8zm7 0h3.8v2.2h.05c.53-1 1.83-2.2 3.77-2.2 4.03 0 4.78 2.65 4.78 6.1V24h-4v-7.1c0-1.7-.03-3.9-2.38-3.9-2.38 0-2.74 1.86-2.74 3.78V24h-4V8z"/></svg>
         </span>
@@ -192,7 +192,7 @@
       </a>
 
       <!-- Email -->
-      <a class="boton" id="btn-email" href="mailto:jbs324@ual.es">
+      <a class="boton" id="btn-email" data-evento="email" href="mailto:jbs324@ual.es">
         <span class="icono ic-mail">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm10 7L3.5 6h17L12 11zm0 2.2L3 7.3V18h18V7.3l-9 5.9z"/></svg>
         </span>
@@ -200,7 +200,7 @@
       </a>
 
       <!-- Llamada -->
-      <a class="boton" href="tel:+34655101883">
+      <a class="boton" data-evento="llamar" href="tel:+34655101883">
         <span class="icono ic-call">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.12.35.03.74-.24 1.02l-2.2 2.2z"/></svg>
         </span>
@@ -208,7 +208,7 @@
       </a>
 
       <!-- Poster (abre el modal) -->
-      <button class="boton" type="button" id="btn-poster">
+      <button class="boton" type="button" id="btn-poster" data-evento="ver-poster">
         <span class="icono ic-poster">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M21 5v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zm-2 0H5v9.59l3.3-3.3 4 4 3-3L19 16.59V5zM7.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
         </span>
@@ -235,8 +235,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <a class="btn-descargar" href="poster.pdf" download data-i18n="poster_download">Descargar PDF</a>
-        <a class="btn-pantalla" href="poster.pdf" target="_blank" rel="noopener" data-i18n="poster_fullscreen">Abrir a pantalla completa</a>
+        <a class="btn-descargar" href="poster.pdf" download data-evento="descargar-poster" data-i18n="poster_download">Descargar PDF</a>
+        <a class="btn-pantalla" href="poster.pdf" target="_blank" rel="noopener" data-evento="poster-pantalla" data-i18n="poster_fullscreen">Abrir a pantalla completa</a>
       </div>
     </div>
   </div>
@@ -328,6 +328,22 @@
       img.style.display = "none";
       sinPreview.style.display = "block";
     });
+
+    // ============= ANALITICA: conteo por boton (GoatCounter) =============
+    // La visita (pageview) se cuenta sola con el script de abajo.
+    // Aqui registramos ademas que opcion pulsa la gente.
+    function contarEvento(nombre) {
+      if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({ path: "boton-" + nombre, title: "Click: " + nombre, event: true });
+      }
+    }
+    document.querySelectorAll("[data-evento]").forEach(function (el) {
+      el.addEventListener("click", function () { contarEvento(el.getAttribute("data-evento")); });
+    });
   </script>
+
+  <!-- Analitica GoatCounter (sin cookies, sin banner). Panel: https://joseraulbs.goatcounter.com -->
+  <script data-goatcounter="https://joseraulbs.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
